@@ -1,0 +1,43 @@
+.empty img{
+    padding: 40px;
+    border: dashed 1px #dfdfdf;
+    margin-top: 120px;
+    position: relative;
+    left: 50%;
+    margin-left: -73px;
+}
+
+.empty p{
+    text-align: center;
+}
+
+
+.search{
+    position: relative;
+    width: 25px;
+    margin: 12px;
+    float: right;
+}
+
+.cclb{
+    background: #fff;
+}
+
+.cclb table{
+    width: 100%;
+    text-align: center;
+    font-size: .9rem;
+}
+
+.cclb table tr{
+    height:36px;
+    border-bottom: solid 1px #ccc;
+}
+
+.cclb table tr:first-child{
+    background: #e3e6e6;
+}
+
+.cclb table tr td p{
+    margin: 5px;
+}

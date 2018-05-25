@@ -1,0 +1,42 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-family: '微软雅黑';
+    color: rgb(39, 39, 39);
+}
+
+.navigation {
+    position: relative;
+    top: 0;
+    width: 100vw;
+    text-align: center;
+    height: 48px;
+    line-height: 48px;
+    background: #b00e23;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.main-content {
+    height: calc(100vh - 94px);
+    background: rgb(243, 243, 243);
+    overflow-y: auto;
+}
+
+.chedang-div{
+    background: #fff;
+    text-align: center;
+    display: flex;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    border-bottom: solid 1px #efefef;
+}
+
+.navigation-title{
+    margin: 0;
+    position: absolute;
+    width: 100vw;
+}

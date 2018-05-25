@@ -1,0 +1,27 @@
+.chedang-div div{
+    flex: 1;
+}
+
+.chedang-div div p{
+    margin: 10px 0;
+}
+
+.cclb{
+    background: #fff;
+}
+
+.cclb table{
+    width: 100%;
+    text-align: center;
+    border-top: solid 1px #ccc;
+
+}
+
+.cclb table tr{
+    height:36px;
+    border-bottom: solid 1px #ccc;
+}
+
+.cclb table tr:first-child{
+    background: #e3e6e6;
+}

@@ -1,0 +1,20 @@
+.cclb{
+    background: #fff;
+}
+
+.cclb table{
+    width: 100%;
+    text-align: center;
+    border-top: solid 1px #ccc;
+    font-size: .9rem;
+
+}
+
+.cclb table tr{
+    height:36px;
+    border-bottom: solid 1px #ccc;
+}
+
+.cclb table tr:first-child{
+    background: #e3e6e6;
+}
