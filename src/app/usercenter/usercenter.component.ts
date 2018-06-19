@@ -15,6 +15,7 @@ export class UsercenterComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.data.clearInterval();
     this.userInfo = this.data.userInfo;
     this.usercenter();
     this.data.intervalCapital = setInterval(() => {

@@ -70,6 +70,12 @@ export class BuyComponent implements DoCheck {
         }
     }
 
+    // tslint:disable-next-line:use-life-cycle-interface
+    ngOnDestroy() {
+        console.log('destroy');
+        this.cancelSubscribe();
+    }
+
     /**
      * 获取行情快照
      */
@@ -105,7 +111,12 @@ export class BuyComponent implements DoCheck {
         } else if (this.appointPrice > parseFloat(this.stockHQ.highPrice)) {
             this.data.ErrorMsg('委托价格不能高于涨停价');
         } else if (this.appointCnt % 100 !== 0) {
-            this.data.ErrorMsg(this.text + '数量必须是100的整数倍');
+            if (this.classType === 'SELL' && this.appointCnt === this.fullcount) {
+                this.submitAlert = this.data.show;
+            } else {
+                this.data.ErrorMsg(this.text + '数量必须是100的整数倍');
+            }
+
         } else if (this.appointCnt > this.fullcount) {
             this.data.ErrorMsg(this.text + '数量必须小于可' + this.text2 + '股数');
         } else if (this.appointCnt <= 0) {
@@ -182,21 +193,30 @@ export class BuyComponent implements DoCheck {
      * 选择买入量
      */
     selectCount(text) {
-        this.ccount = text;
-        switch (text) {
-            case 'full':
-                this.appointCnt = this.data.roundDown(this.fullcount);
-                break;
-            case 'half':
-                this.appointCnt = this.data.roundDown(this.fullcount / 2);
-                break;
-            case '1/3full':
-                this.appointCnt = this.data.roundDown(this.fullcount / 3);
-                break;
-            case '1/4full':
-                this.appointCnt = this.data.roundDown(this.fullcount / 4);
-                break;
+        if (this.fullcount !== '--') {
+            this.ccount = text;
+            switch (text) {
+                case 'full':
+                    // 选择全仓的时候，判断是否是买入，买入的话，全仓数量按照正常规则。卖出的话，全仓数量为可卖数量
+                    if (this.classType === 'BUY') {
+                        this.appointCnt = this.data.roundDown(this.fullcount);
+                    } else {
+                        this.appointCnt = this.fullcount;
+                    }
+
+                    break;
+                case 'half':
+                    this.appointCnt = this.data.roundDown(this.fullcount / 2);
+                    break;
+                case '1/3full':
+                    this.appointCnt = this.data.roundDown(this.fullcount / 3);
+                    break;
+                case '1/4full':
+                    this.appointCnt = this.data.roundDown(this.fullcount / 4);
+                    break;
+            }
         }
+
     }
 
     /**

@@ -17,7 +17,7 @@ export class SsgpComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.data.clearInterval();
   }
 
   close() {
@@ -52,8 +52,12 @@ export class SsgpComponent implements OnInit {
         return;
       }
     }
+    if (this.zixuanList === '') {
+      this.zixuanList = code;
+    } else {
+      this.zixuanList = code + ',' + this.zixuanList;
+    }
 
-    this.zixuanList = code + ',' + this.zixuanList;
     this.data.ErrorMsg('添加成功');
     this.data.setLocalStorage('zixuan', this.zixuanList);
     console.log(this.zixuanList);

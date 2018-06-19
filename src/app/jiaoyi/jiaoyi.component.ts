@@ -22,6 +22,12 @@ export class JiaoyiComponent implements DoCheck {
 
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
+  ngOnDestroy() {
+    console.log('destroy');
+    this.data.clearInterval();
+  }
+
   goto(url) {
     this.url = url;
     this.data.goto('main/jiaoyi/' + url);

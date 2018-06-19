@@ -15,9 +15,10 @@ export class DataService {
   show = true;
   hide = false;
   token: string;
-  intervalCapital: any;
-  intervalHold: any;
-  intervalAppoint: any;
+  intervalCapital: any; // 个人中心
+  intervalHold: any;  // 持仓
+  intervalAppoint: any; // 委托
+  intervalZX: any; // 自选股
   nowUrl: string;
   market: 'market'; // 行情的ws，header
 
@@ -374,6 +375,7 @@ export class DataService {
     window.clearInterval(this.intervalAppoint);
     window.clearInterval(this.intervalCapital);
     window.clearInterval(this.intervalHold);
+    window.clearInterval(this.intervalZX);
   }
 }
 export interface Error {

@@ -19,12 +19,11 @@ export class FooterComponent implements DoCheck {
     if (this.url === 'ssgp') {
       this.url = 'zixuan';
     }
-
     this.menuList = this.data.getFooterMenu();
     this.title();
-    if (this.data.getUrl(2) === 'zixuan') {
+    if (this.data.getUrl(2) !== 'jiaoyi') {
       this.data.nowUrl = '';
-      this.data.clearInterval();
+     // this.data.clearInterval();
     }
   }
 

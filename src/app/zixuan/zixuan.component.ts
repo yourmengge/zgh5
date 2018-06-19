@@ -29,14 +29,16 @@ export class ZixuanComponent implements OnInit {
   constructor(public data: DataService, public http: HttpService) { }
 
   ngOnInit() {
+    this.data.clearInterval();
     this.zixuanList = this.data.getLocalStorage('zixuan');
-    this.zixuanList = this.zixuanList.substr(0, this.zixuanList.length - 1);
     if (!this.data.isNull(this.zixuanList)) {
       this.hasZixuan = this.data.show;
       this.subscribe();
+      this.data.intervalZX = setInterval(() => {
+        this.subscribe();
+      }, 3000);
     }
 
-    console.log(this.zixuanList);
   }
 
   edit() {
@@ -72,10 +74,18 @@ export class ZixuanComponent implements OnInit {
 
   del(code) {
     this.zixuanArray = this.zixuanList.split(',');
-    console.log(this.zixuanArray);
-    for (const i in this.zixuanArray) {
+    for (let i = 0; i < this.zixuanArray.length; i++) {
       if (this.zixuanArray[i] === code) {
-
+        this.zixuanArray.splice(i, 1);
+        this.data.ErrorMsg('该股票删除成功');
+        this.zixuanList = this.zixuanArray.toString();
+        if (this.zixuanList !== '') {
+          this.subscribe();
+        } else {
+          this.data.clearInterval();
+          this.hasZixuan = this.data.hide;
+        }
+        this.data.setLocalStorage('zixuan', this.zixuanArray);
       }
     }
 
