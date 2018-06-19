@@ -14,5 +14,29 @@
 				参考成本/现价
 			</td>
 		</tr>
+		<tr *ngFor='let a of list'>
+			<td>
+				{{a.stockName}}
+			</td>
+			<td class="{{a.profit < 0?'green':'red'}}">
+				{{a.profit}}
+			</td>
+			<td>
+				<p>
+					{{a.stockCnt}}
+				</p>
+				<p>
+					{{a.stockCntAble}}
+				</p>
+			</td>
+			<td>
+				<p>
+					{{a.costPrice}}
+				</p>
+				<p>
+					{{a.lastPrice}}
+				</p>
+			</td>
+		</tr>
 	</table>
 </div>

@@ -14,7 +14,12 @@ export class JiaoyiComponent implements DoCheck {
   }
 
   ngDoCheck() {
-    this.url = window.location.pathname.split('/')[3];
+    if (this.data.nowUrl !== this.data.getUrl(3)) {
+      this.data.nowUrl = this.data.getUrl(3);
+      this.url = this.data.getUrl(3);
+      this.data.clearInterval();
+    }
+
   }
 
   goto(url) {

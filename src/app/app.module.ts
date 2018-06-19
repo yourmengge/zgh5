@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -13,19 +15,22 @@ import { FooterComponent } from './footer/footer.component';
 import { JiaoyiComponent } from './jiaoyi/jiaoyi.component';
 import { ZixuanComponent } from './zixuan/zixuan.component';
 import { BuyComponent } from './buy/buy.component';
-import { SellComponent } from './sell/sell.component';
 import { ChedanComponent } from './chedan/chedan.component';
 import { ChicangComponent } from './chicang/chicang.component';
 import { SearchComponent } from './search/search.component';
 import { CclbComponent } from './cclb/cclb.component';
 import { SsgpComponent } from './ssgp/ssgp.component';
 import { HttpService } from './http.service';
+import { AlertComponent } from './alert/alert.component';
+import { LoadingComponent } from './loading/loading.component';
+import { NumIntPipe } from './num-int.pipe';
+import { ToFixedPipe } from './to-fixed.pipe';
 
 const jiaoyiChildRoutes: Routes = [
   { path: 'chicang', component: ChicangComponent },
   { path: 'chedan', component: ChedanComponent },
   { path: 'search', component: SearchComponent },
-  { path: 'sell', component: SellComponent },
+  { path: 'sell', component: BuyComponent },
   { path: 'buy', component: BuyComponent },
   { path: '', redirectTo: 'buy', pathMatch: 'full' }
 ];
@@ -55,18 +60,23 @@ const appRoutes: Routes = [
     JiaoyiComponent,
     ZixuanComponent,
     BuyComponent,
-    SellComponent,
     ChedanComponent,
     ChicangComponent,
     SearchComponent,
     CclbComponent,
-    SsgpComponent
+    SsgpComponent,
+    AlertComponent,
+    LoadingComponent,
+    NumIntPipe,
+    ToFixedPipe
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(appRoutes, { enableTracing: true }),
+    HttpClientModule,
+    RouterModule.forRoot(appRoutes, { enableTracing: true, useHash: true }),
   ],
   providers: [DataService, HttpService],
   bootstrap: [AppComponent]

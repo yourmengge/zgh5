@@ -1,20 +1,134 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { ReturnStatement } from '@angular/compiler';
+import { RequestOptions, Headers } from '@angular/http';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable()
+
 export class DataService {
 
-  constructor(public router: Router) { }
+  alert = false;
+  loading = false;
+  errMsg = '出错啦';
+  error: Error;
+  show = true;
+  hide = false;
+  token: string;
+  intervalCapital: any;
+  intervalHold: any;
+  intervalAppoint: any;
+  nowUrl: string;
+  market: 'market'; // 行情的ws，header
+
   /**
-   * 用户信息
+   * 股票行情
    */
-  userInfo = {
-    allottedScale: '', // 初期规模
-    ableScale: '',  // 可用资金
-    cashScale: '', // 保证金
-    accountCommission: '', // 交易佣金
-    accountName: '' // 中文名
+  stockHQ = {
+    'closePrice': '',
+    'highPrice': '',
+    'lowPrice': '',
+    'lastPrice': '',
+    'openPrice': '',
+    'orderTime': '',
+    'preClosePrice': '',
+    'stockCode': '',
+    'buyLevel': {
+      'buyPrice01': '--',
+      'buyPrice02': '--',
+      'buyPrice03': '--',
+      'buyPrice04': '--',
+      'buyPrice05': '--',
+      'buyPrice06': '--',
+      'buyPrice07': '--',
+      'buyPrice08': '--',
+      'buyPrice09': '--',
+      'buyPrice10': '--',
+      'buyVolume01': '--',
+      'buyVolume02': '--',
+      'buyVolume03': '--',
+      'buyVolume04': '--',
+      'buyVolume05': '--',
+      'buyVolume06': '--',
+      'buyVolume07': '--',
+      'buyVolume08': '--',
+      'buyVolume09': '--',
+      'buyVolume10': '--'
+    },
+    'sellLevel': {
+      'sellPrice01': '--',
+      'sellPrice02': '--',
+      'sellPrice03': '--',
+      'sellPrice04': '--',
+      'sellPrice05': '--',
+      'sellPrice06': '--',
+      'sellPrice07': '--',
+      'sellPrice08': '--',
+      'sellPrice09': '--',
+      'sellPrice10': '--',
+      'sellVolume01': '--',
+      'sellVolume02': '--',
+      'sellVolume03': '--',
+      'sellVolume04': '--',
+      'sellVolume05': '--',
+      'sellVolume06': '--',
+      'sellVolume07': '--',
+      'sellVolume08': '--',
+      'sellVolume09': '--',
+      'sellVolume10': '--'
+    }
+
   };
+  /**
+   * 当日委托数据类型
+   */
+  drwt = {
+    'accountCode': '',
+    'appointCnt': 900,
+    'appointOrderCode': '',
+    'appointPrice': '',
+    'appointStatus': '',
+    'appointStockCode': '',
+    'appointTime': '',
+    'appointType': 1,
+    'dealAvrPrice': '',
+    'dealCnt': 900,
+    'isVritual': 1,
+    'memo': '',
+    'pkOrder': '',
+    'productCode': '',
+    'teamCode': ''
+  };
+  /**
+ * 用户信息
+ */
+  userInfo = {
+    allottedScale: 0, // 初期规模
+    ableScale: 0,  // 可用资金
+    accountName: 'mario', // 中文名
+    lockScale: 0, // 冻结资金
+    stockScale: 0, // 股票市值
+    totalScale: 0 // 总资产
+  };
+
+  opUserCode: string;
+
+  constructor(public router: Router) {
+    if (this.getSession('userInfo') !== null) {
+      this.opUserCode = this.getSession('opUserCode');
+      const response = this.getSession('userInfo');
+      this.token = '';
+    }
+  }
+
+  /**
+   * 获取当前url最后的参数
+   */
+  getUrl(num) {
+    return window.location.hash.split('/')[num];
+  }
+
+
   /**
    * 页面跳转
    */
@@ -27,11 +141,6 @@ export class DataService {
    */
   getFooterMenu() {
     return [{
-      id: 'hangqing',
-      name: '行情',
-      title: '行情',
-      class: ''
-    }, {
       id: 'zixuan',
       name: '自选',
       title: '自选',
@@ -84,11 +193,11 @@ export class DataService {
       itg: {
         content: data,
         infCode: apiCode,
-        msgTime: this.getTime(),
+        msgTime: this.getTime('yyyyMMddhhmmss', new Date()),
         msgType: 0,
         opUserCode: opUserCode,
         opUserType: 6,
-        reqNo: this.getTime(),
+        reqNo: this.getTime('yyyyMMddhhmmss', new Date()),
         reqSource: 'human_channel'
       }
     };
@@ -99,15 +208,24 @@ export class DataService {
   /**
    * 获取当前时间：毫秒
    */
-  getTime() {
-    const year = new Date().getFullYear();
-    const month = new Date().getMonth() + 1;
-    const day = new Date().getDate();
-    const hour = new Date().getHours();
-    const minutes = new Date().getMinutes();
-    const seconds = new Date().getSeconds();
-    const millseconds = new Date().getMilliseconds();
-    return year + this.add0(month) + this.add0(day) + this.add0(hour) + this.add0(minutes) + this.add0(seconds) + this.add0(millseconds);
+  getTime(type, time) {
+    time = new Date(time);
+    const year = time.getFullYear();
+    const month = time.getMonth() + 1;
+    const day = time.getDate();
+    const hour = time.getHours();
+    const minutes = time.getMinutes();
+    const seconds = time.getSeconds();
+    const millseconds = time.getMilliseconds();
+    switch (type) {
+      case 'yyyyMMddhhmmss':
+        return year + this.add0(month) + this.add0(day) +
+          this.add0(hour) + this.add0(minutes) + this.add0(seconds) + this.add0(millseconds);
+      case 'yyyy-MM-dd':
+        return year + '-' + this.add0(month) + '-' + this.add0(day);
+      case 'yyyyMMss':
+        return year + this.add0(month) + this.add0(day);
+    }
   }
 
   /**
@@ -116,4 +234,156 @@ export class DataService {
   add0(num) {
     return num < 10 ? '0' + num : num;
   }
+
+  getSession(name): any {
+    return sessionStorage.getItem(name);
+  }
+  setSession(name, data) {
+    return sessionStorage.setItem(name, data);
+  }
+
+  removeSession(name) {
+    return sessionStorage.removeItem(name);
+  }
+
+  getLocalStorage(name) {
+    return localStorage.getItem(name);
+  }
+
+  setLocalStorage(name, data) {
+    return localStorage.setItem(name, data);
+  }
+
+  /**
+   * 请求出错提示
+   */
+  isError() {
+    this.Loading(this.hide);
+    this.alert = true;
+    setTimeout(() => {
+      this.alert = false;
+    }, 2000);
+    this.errMsg = this.error.resultInfo;
+    if (this.error.resultCode === 'token.error') {
+      this.removeSession('token');
+      this.clearInterval();
+      this.goto('/');
+    }
+  }
+
+  /**
+   * 输入出错提示
+   */
+  ErrorMsg(desc) {
+    this.alert = true;
+    setTimeout(() => {
+      this.alert = false;
+    }, 2000);
+    this.errMsg = desc;
+  }
+
+  /**
+   * 加载中提示
+   */
+  Loading(type) {
+    this.loading = type;
+  }
+
+  /**
+   * 买入卖出数量向上取整
+   */
+  roundDown(num) {
+    return parseInt((num / 100).toString(), 0) * 100;
+  }
+
+  /**
+   * 判断是否为空
+   */
+  isNull(string) {
+    // tslint:disable-next-line:max-line-length
+    return (string === 'undefined' || string === '' || string === null || string === 'null' || string === undefined || string === 'NaN') ? true : false;
+  }
+
+  hadHeader() {
+    if (this.getSession('header') !== undefined) {
+      const headers = new HttpHeaders(JSON.parse(this.getSession('header')));
+      return headers;
+    }
+  }
+
+  getHeader() {
+    if (this.isNull(this.token)) {
+      if (this.isNull(this.getSession('token'))) {
+        this.ErrorMsg('请重新登录');
+        this.goto('/');
+      }
+      this.token = this.getSession('token');
+      return { headers: new HttpHeaders({ 'Authorization': this.getSession('token') }) };
+    } else {
+      return { headers: new HttpHeaders({ 'Authorization': this.token }) };
+    }
+
+  }
+
+  getOpUserCode() {
+    if (this.isNull(this.opUserCode)) {
+      return this.getSession('opUserCode');
+    } else {
+      return this.opUserCode;
+    }
+  }
+
+  /**
+   * 限制只能输入数字
+   */
+  keyup() {
+    const k = event['keyCode'];
+    if (((k >= 48) && (k <= 57)) || k === 8 || ((k >= 96) && (k <= 105)) || k === 110 || k === 190) {// 限制输入数字
+
+    } else {
+      this.preventDefault();
+    }
+  }
+
+  preventDefault() {
+    if (window.event) {
+      window.event.returnValue = false;
+    } else {
+      event.preventDefault(); // for firefox
+    }
+  }
+
+  /**
+   * 判断时间点是否在9：00到11：30，13：00到15：00之间
+   */
+  isPerfectTime() {
+    const time = new Date();
+    if (time.getHours() >= 9 && (time.getHours() <= 11 && time.getMinutes() <= 30)) {
+      return true;
+    }
+    if (time.getHours() >= 13 && time.getHours() <= 14) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * 清除轮询
+   */
+  clearInterval() {
+    window.clearInterval(this.intervalAppoint);
+    window.clearInterval(this.intervalCapital);
+    window.clearInterval(this.intervalHold);
+  }
+}
+export interface Error {
+  resultCode: string;
+  resultInfo: string;
+  success: boolean;
+}
+
+export interface StockList {
+  pinYin: string;
+  stockCode: string;
+  stockName: string;
 }

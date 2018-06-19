@@ -15,12 +15,17 @@ export class FooterComponent implements DoCheck {
   constructor(public data: DataService) { }
 
   ngDoCheck() {
-    this.url = window.location.pathname.split('/')[2];
+    this.url = this.data.getUrl(2);
     if (this.url === 'ssgp') {
       this.url = 'zixuan';
     }
+
     this.menuList = this.data.getFooterMenu();
     this.title();
+    if (this.data.getUrl(2) === 'zixuan') {
+      this.data.nowUrl = '';
+      this.data.clearInterval();
+    }
   }
 
 

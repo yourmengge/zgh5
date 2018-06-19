@@ -1,27 +1,48 @@
-.chedang-div div{
+.chedang-div div {
     flex: 1;
 }
 
-.chedang-div div p{
+.chedang-div div p {
     margin: 10px 0;
+    margin-left: 20px;
 }
 
-.cclb{
+.cclb {
     background: #fff;
 }
 
-.cclb table{
+.cclb table {
     width: 100%;
+    font-size: .9rem;
     text-align: center;
     border-top: solid 1px #ccc;
-
 }
 
-.cclb table tr{
-    height:36px;
+.cclb table tr {
+    height: 36px;
     border-bottom: solid 1px #ccc;
 }
 
-.cclb table tr:first-child{
+.cclb table tr:first-child {
     background: #e3e6e6;
+}
+
+.span {
+    float: left;
+    margin-top: 14px;
+    font-size: .7rem;
+    display: block;
+    border: solid 1px #b00e23;
+    border-radius: 50px;
+    height: 20px;
+    width: 20px;
+    line-height: 20px;
+    margin-left: 2px;
+    color: #b00e23;
+    margin-right: 2px;
+}
+
+.blue {
+    color: #145c90 !important;
+    border: solid 1px #145c90 !important;
 }

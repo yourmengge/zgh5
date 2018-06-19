@@ -1,15 +1,17 @@
 <div class="chedang-div">
     <div>
+        <div class="icon4"></div>
         <p>
-            50000.00
+            {{userInfo.totalScale}}
         </p>
         <p>
             总资金
         </p>
     </div>
     <div>
+        <div class="icon4 djzj"></div>
         <p>
-            0.00
+            {{userInfo.lockScale}}
         </p>
         <p>
             冻结资金
@@ -18,16 +20,18 @@
 </div>
 <div class="chedang-div">
     <div>
+        <div class="icon4 gpsz"></div>
         <p>
-            50000.00
+            {{userInfo.stockScale}}
         </p>
         <p>
             股票市值
         </p>
     </div>
     <div>
+        <div class="icon4 kyzj"></div>
         <p>
-            0.00
+            {{userInfo.ableScale}}
         </p>
         <p>
             可用资金
@@ -44,11 +48,78 @@
                 委托/均价
             </td>
             <td>
-                委托/成交
+                委托/成交量
             </td>
             <td>
                 时间/状态
             </td>
         </tr>
+        <tr (click)='chedan(a)' *ngFor='let a of list'>
+            <td>
+                <span class="span {{a.appointTypeDesc === '卖'?'blue':''}}">
+                    {{a.appointTypeDesc}}
+                </span>
+                <p>
+                    {{a.stockName}}
+                </p>
+                <p>
+                    {{a.stockCode}}
+                </p>
+            </td>
+            <td>
+                <p>
+                    {{a.appointPrice}}
+                </p>
+                <p>
+                    {{a.dealAvrPrice}}
+                </p>
+            </td>
+            <td>
+                <p>
+                    {{a.appointCnt}}
+                </p>
+                <p>
+                    {{a.dealCnt}}
+                </p>
+            </td>
+            <td>
+                <p>
+                    {{a.appointTime}}
+                </p>
+                <p>
+                    {{a.appointStatusDesc}}
+                </p>
+            </td>
+        </tr>
     </table>
+</div>
+<div class="submit-alert" *ngIf='submitAlert'>
+    <div class="alert-div">
+        <p>
+            确认撤单
+        </p>
+        <p>
+            名&emsp;&emsp;称：
+            <span>{{orderData.stockName}}</span>
+        </p>
+        <p>
+            代&emsp;&emsp;码：
+            <span>{{orderData.stockCode}}</span>
+        </p>
+        <p>
+            委托数量：
+            <span>{{orderData.appointCnt}}</span>
+        </p>
+        <p>
+            委托价格：
+            <span>{{orderData.appointPrice}}</span>
+        </p>
+        <button class="submit-btn" (click)='submitChedan()'>
+            撤{{type}}单
+        </button>
+        <br>
+        <button class="cancel-btn" (click)='closeAlert()'>
+            取消
+        </button>
+    </div>
 </div>

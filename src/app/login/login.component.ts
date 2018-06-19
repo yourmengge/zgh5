@@ -13,7 +13,9 @@ export class LoginComponent implements OnInit {
 
   public phone: string;
   public password: string;
-
+  public header = {
+    'Authorization': ''
+  };
   constructor(public data: DataService, public http: HttpService) {
   }
 
@@ -21,25 +23,36 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    const content = {
-      'accountPwd': Md5.hashStr(this.password),
-      'loginDiskSn': '0000000000',
-      'loginIp': '0.0.0.0',
-      'loginMac': '00-00-00-00-00'
-    };
-    this.http.Login(this.data.reqBody(content, 'ITG_LOGIN_TNACCOUNT', this.phone)).subscribe((res: Response) => {
-      console.log(res);
-      const response = res.json()['itg']['content'];
-      console.log(response);
-      this.data.userInfo = {
-        allottedScale: response['allottedScale'], // 初期规模
-        ableScale: response['ableScale'],  // 可用资金
-        cashScale: response['cashScale'], // 保证金
-        accountCommission: response['accountCommission'], // 交易佣金
-        accountName: response['accountName'] // 中文名
+    if (this.phone === '') {
+      this.data.ErrorMsg('请输入登录账号');
+    } else if (this.password === '') {
+      this.data.ErrorMsg('请输入登录密码');
+    } else {
+      const body = {
+        'username': this.phone,
+        'password': Md5.hashStr(this.password)
       };
-      this.data.goto('main');
-    });
-  }
+      this.data.loading = this.data.show;
+      this.http.login(body).subscribe((res) => {
+        console.log(res);
+        this.data.setSession('opUserCode', this.phone);
+        this.data.opUserCode = this.phone;
+        this.data.token = res['resultInfo'];
+        this.data.setSession('token', this.data.token);
+        // this.header = {
+        //   'Authorization': res['itg']['token']
+        // };
+        // const headers: Headers = new Headers(this.header);
+        // this.http.opts = new RequestOptions({ headers: headers });
+        // this.data.setSession('header', JSON.stringify(this.header));
+        this.data.goto('main/usercenter');
+      }, (err) => {
+        this.data.error = err.error;
+        this.data.isError();
+      }, () => {
+        this.data.loading = this.data.hide;
+      });
 
+    }
+  }
 }

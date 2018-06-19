@@ -71,10 +71,13 @@
     color: #fff;
     height: 35px;
     line-height: 35px;
+    border: solid 1px #b00e23;
 }
 
 .clear {
-    background: #3c75b1 !important;
+    background: #f8f8f8 !important;
+    border: solid 1px #ddd !important;
+    color: #000 !important;
 }
 
 .right-div {
@@ -94,15 +97,38 @@
     flex: 1;
 }
 
-.line{
+.line {
     border-bottom: dashed 1px #ccc;
     height: 1px !important;
 }
 
-.gpmc{
+.gpmc {
     float: right;
     position: relative;
     margin-top: -27px;
     font-size: .9rem;
     margin-right: 5px;
+}
+
+.green-red {
+    margin-top: -10px !important;
+    margin-bottom: 5px;
+    height: 17px;
+}
+
+.four-btn-active {
+    background: #d4d4d4
+}
+
+.SELL .input {
+    border: solid 1px #145c90;
+}
+
+.SELL .buy div {
+    background: #145c90;
+    border: solid 1px #145c90;
+}
+
+.SELL .add-down div {
+    background: #145c90;
 }

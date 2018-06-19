@@ -1,45 +1,44 @@
 <div class="navigation">
+  <div class="edit" (click)='edit()'>编辑</div>
   <p class="navigation-title">自选</p>
-  <img src="../../assets/images/search1.png" alt="" class="search" (click)='goto()'>
+  <img src="./assets/images/search1.png" alt="" class="search" (click)='goto()'>
 </div>
-<div class="empty">
-  <img src="../../assets/images/add.png" alt="" (click)='goto()'>
+<div class="empty" *ngIf='!hasZixuan'>
+  <img src="./assets/images/add.png" alt="" (click)='goto()'>
   <p>暂无股票，点击添加</p>
 </div>
-<div class="notempty cclb">
-  <table cellspacing="0" cellpadding="0">
-    <tr>
-      <td>
-        名称代码
-      </td>
-      <td>
-        最新
-      </td>
-      <td>
-        涨幅
-      </td>
-      <td>
-        涨跌
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <p>
-          反对法士大夫
-        </p>
-        <p>
-          404434
-        </p>
-      </td>
-      <td>
-        10.33
-      </td>
-      <td>
-        10.33
-      </td>
-      <td>
-        10.33
-      </td>
-    </tr>
-  </table>
+<div class="notempty cclb" *ngIf='hasZixuan'>
+  <div class="table-flex">
+    <div>
+      名称代码
+    </div>
+    <div>
+      最新
+    </div>
+    <div>
+      涨幅
+    </div>
+    <div>
+      涨跌
+    </div>
+  </div>
+  <div class="table-flex2"  [@showDelete]="show" *ngFor='let a of list'>
+    <div>
+      <!-- <a class="delete-btn" (click)='del(a.stockCode)'></a> -->
+      <img class="delete-btn" src="./assets/images/del.png" (click)='del(a.stockCode)'>
+    </div>
+    <div>
+      {{a.stockName}} -
+      {{a.stockCode}}
+    </div>
+    <div>
+      {{a.lastPrice}}
+    </div>
+    <div>
+      {{a.upRatio}}
+    </div>
+    <div>
+      {{a.diff}}
+    </div>
+  </div>
 </div>

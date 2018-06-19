@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpService } from '../http.service';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-chicang',
@@ -6,10 +8,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chicang.component.css']
 })
 export class ChicangComponent implements OnInit {
-
-  constructor() { }
+  public userInfo: DataService['userInfo'];
+  constructor(public data: DataService, public http: HttpService) { }
 
   ngOnInit() {
+    this.userInfo = this.data.userInfo;
+    this.usercenter();
+    this.data.intervalCapital = setInterval(() => {
+      this.usercenter();
+    }, 3000);
   }
 
+  usercenter() {
+    this.http.userCenter().subscribe((res: DataService['userInfo']) => {
+      this.userInfo = res;
+    }, (err) => {
+      this.data.error = err.error;
+      this.data.isError();
+    }, () => {
+      this.data.Loading(this.data.hide);
+    });
+  }
 }

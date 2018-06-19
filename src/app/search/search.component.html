@@ -1,26 +1,18 @@
 <div class="search-head">
-	<p class="search-title">当日委托</p>
-	<div class="search-content">
-		<div>
-			<p>
-				起始时间
-			</p>
-			<p>
-				2018-05-25
-			</p>
+	<p class="search-title">委托时间</p>
+	<p class="search-title" style="text-align: center">{{dateTime}}</p>
+	<!-- <div class="search-content">
+		<div (click)='change(-1)'>
+			<img class="right" src="./assets/images/left.png" alt="">
 		</div>
 		<div>
-			<img class="right" src="../../assets/images/right.png" alt="">
+			<input class="selectTime" type="date" [(ngModel)]='selectTime' (change)='select()'>{{dateTime}}
 		</div>
-		<div>
-			<p>
-				截至时间
-			</p>
-			<p>
-				2018-05-25
-			</p>
+		<div (click)='change(1)'>
+			<img class="right" src="./assets/images/right.png" alt="">
 		</div>
-	</div>
+		
+	</div> -->
 
 </div>
 <div class="cclb">
@@ -37,6 +29,41 @@
 			</td>
 			<td>
 				委托/成交量
+			</td>
+		</tr>
+		<tr *ngFor='let a of list'>
+			<td>
+				<span class="span {{a.appointTypeDesc === '卖'?'blue':''}}">{{a.appointTypeDesc}}</span>
+				<p>
+					{{a.stockName}}
+				</p>
+				<p>
+					{{a.stockCode}}
+				</p>
+			</td>
+			<td>
+				<p>
+					{{a.appointStatusDesc}}
+				</p>
+				<p>
+					{{a.appointTime}}
+				</p>
+			</td>
+			<td>
+				<p>
+					{{a.appointPrice}}
+				</p>
+				<p>
+					{{a.dealAvrPrice}}
+				</p>
+			</td>
+			<td>
+				<p>
+					{{a.appointCnt}}
+				</p>
+				<p>
+					{{a.dealCnt}}
+				</p>
 			</td>
 		</tr>
 	</table>
