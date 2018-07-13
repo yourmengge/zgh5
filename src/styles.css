@@ -13,8 +13,8 @@ html, body {
     top: 0;
     width: 100vw;
     text-align: center;
-    height: 48px;
-    line-height: 48px;
+    height: 49px;
+    line-height: 49px;
     background: #b00e23;
     color: #fff;
     font-size: 1.2rem;
@@ -170,24 +170,28 @@ table td p {
 }
 
 .icon4{
-    background: url('./assets/images/icon.png') no-repeat;
-    height: 36px;
-    width: 36px;
-    background-size: 400% 100%;
+    background: url('./assets/images/icon4.png') no-repeat;
+    height: 25px;
+    width: 25px;
     float: left;
-    position: absolute;
-    margin-left: 20px;
-    margin-top: 15px;
+    margin-left: 22px;
+    margin-top: 21px;
+    margin-right: -37px;
+    background-size: 100%;
 }
 
 .djzj{
-    background-position-x: -71px;
+    background: url('./assets/images/icon1.png') no-repeat;
+    background-size: 100%;
+   
 }
 
 .gpsz{
-    background-position-x: -37px;
+    background: url('./assets/images/icon3.png') no-repeat;
+    background-size: 100%;
 }
 
 .kyzj{
-    background-position-x: -106px;
+    background: url('./assets/images/icon2.png') no-repeat;
+    background-size: 100%;
 }

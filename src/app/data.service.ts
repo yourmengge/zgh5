@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { ReturnStatement } from '@angular/compiler';
-import { RequestOptions, Headers } from '@angular/http';
 import { HttpHeaders } from '@angular/common/http';
 
 @Injectable()
@@ -268,7 +266,7 @@ export class DataService {
     if (this.error.resultCode === 'token.error') {
       this.removeSession('token');
       this.clearInterval();
-      this.goto('/');
+      this.goto('/login');
     }
   }
 
@@ -302,7 +300,7 @@ export class DataService {
    */
   isNull(string) {
     // tslint:disable-next-line:max-line-length
-    return (string === 'undefined' || string === '' || string === null || string === 'null' || string === undefined || string === 'NaN') ? true : false;
+    return (string === NaN || string === 'NaN' || string === 'undefined' || string === '' || string === null || string === 'null' || string === undefined || string === 'NaN') ? true : false;
   }
 
   hadHeader() {
@@ -315,15 +313,27 @@ export class DataService {
   getHeader() {
     if (this.isNull(this.token)) {
       if (this.isNull(this.getSession('token'))) {
+        this.clearInterval();
         this.ErrorMsg('请重新登录');
-        this.goto('/');
+        this.goto('/login');
+        return;
+      } else {
+        this.token = this.getSession('token');
+        return { headers: new HttpHeaders({ 'Authorization': this.getSession('token') }) };
       }
-      this.token = this.getSession('token');
-      return { headers: new HttpHeaders({ 'Authorization': this.getSession('token') }) };
+
     } else {
       return { headers: new HttpHeaders({ 'Authorization': this.token }) };
     }
 
+  }
+
+  getToken() {
+    if (this.isNull(this.token)) {
+      return this.getSession('token');
+    } else {
+      return this.token;
+    }
   }
 
   getOpUserCode() {
@@ -372,10 +382,10 @@ export class DataService {
    * 清除轮询
    */
   clearInterval() {
-    window.clearInterval(this.intervalAppoint);
-    window.clearInterval(this.intervalCapital);
-    window.clearInterval(this.intervalHold);
-    window.clearInterval(this.intervalZX);
+    window.clearTimeout(this.intervalAppoint);
+    window.clearTimeout(this.intervalCapital);
+    window.clearTimeout(this.intervalHold);
+    window.clearTimeout(this.intervalZX);
   }
 }
 export interface Error {

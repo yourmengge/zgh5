@@ -6,16 +6,14 @@
     font-size: .9rem;
     width: 100%;
     text-align: center;
-    border-top: solid 1px #ccc;
 }
 
 .cclb table tr {
     height: 36px;
-    border-bottom: solid 1px #ccc;
 }
 
 .cclb table tr:first-child {
-    background: #e3e6e6;
+    background: #ececec;
 }
 
 .cclb table tr, .cclb table tr td {
@@ -52,9 +50,9 @@
 
 .search-title {
     font-size: 1.4rem;
-    padding-top: 20px;
+    padding-top: 15px;
     margin: 0;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .selectTime {

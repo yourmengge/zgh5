@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { HttpService } from '../http.service';
-import { Response, RequestOptions, Headers } from '@angular/http';
 
 @Component({
   selector: 'app-cclb',
@@ -14,22 +13,17 @@ export class CclbComponent implements OnInit {
 
   ngOnInit() {
     this.cxtgcc();
-    // if (this.data.isPerfectTime()) {
-
-    // }
-    this.data.intervalHold = setInterval(() => {
-      this.cxtgcc();
-    }, 3000);
-
   }
 
   /**
    * 查询投顾持仓
    */
   cxtgcc() {
-    const content = null;
     this.http.getHold().subscribe((res) => {
       this.list = res;
+      this.data.intervalHold = setTimeout(() => {
+        this.cxtgcc();
+      }, 3000);
     }, (err) => {
       this.data.error = err.error;
       this.data.isError();

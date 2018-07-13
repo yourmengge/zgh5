@@ -15,16 +15,14 @@
     width: 100%;
     font-size: .9rem;
     text-align: center;
-    border-top: solid 1px #ccc;
 }
 
 .cclb table tr {
     height: 36px;
-    border-bottom: solid 1px #ccc;
 }
 
 .cclb table tr:first-child {
-    background: #e3e6e6;
+    background: #ececec;
 }
 
 .span {

@@ -18,7 +18,8 @@ export class ChedanComponent implements OnInit {
     appointCnt: '',
     appointPrice: '',
     appointTypeDesc: '',
-    appointOrderCode: ''
+    appointOrderCode: '',
+    dealCnt: ''
   };
   clickTime: any;
   submitAlert: boolean;
@@ -29,19 +30,17 @@ export class ChedanComponent implements OnInit {
   ngOnInit() {
     this.userInfo = this.data.userInfo;
     this.usercenter();
-    this.data.intervalCapital = setInterval(() => {
-      this.usercenter();
-    }, 3000);
     this.getOrder();
-    this.data.intervalAppoint = setInterval(() => {
-      this.getOrder();
-    }, 3000);
+
     this.clickTime = new Date().getTime();
   }
 
   usercenter() {
     this.http.userCenter().subscribe((res: DataService['userInfo']) => {
       this.userInfo = res;
+      this.data.intervalCapital = setTimeout(() => {
+        this.usercenter();
+      }, 3000);
     }, (err) => {
       this.data.error = err.error;
       this.data.isError();
@@ -59,6 +58,7 @@ export class ChedanComponent implements OnInit {
       this.orderData.appointPrice = orderdata.appointPrice;
       this.orderData.stockCode = orderdata.stockCode;
       this.orderData.stockName = orderdata.stockName;
+      this.orderData.dealCnt = orderdata.dealCnt;
       this.type = orderdata.appointTypeDesc;
       this.orderData.appointOrderCode = orderdata.appointOrderCode;
     } else {
@@ -72,9 +72,12 @@ export class ChedanComponent implements OnInit {
     this.http.getAppoint('ing=true').subscribe((res) => {
       this.list = res;
       // tslint:disable-next-line:forin
-      for (const i in this.list) {
-        this.list[i].appointTime = this.toTime(this.list[i].appointTime);
-      }
+      // for (const i in this.list) {
+      //   this.list[i].appointTime = this.toTime(this.list[i].appointTime);
+      // }
+      this.data.intervalAppoint = setTimeout(() => {
+        this.getOrder();
+      }, 3000);
     }, (err) => {
       this.data.error = err.error;
       this.data.isError();
@@ -83,9 +86,9 @@ export class ChedanComponent implements OnInit {
     });
   }
 
-  toTime(time) {
-    return time.substr(0, 2) + ':' + time.substr(2, 2) + ':' + time.substr(4, 2);
-  }
+  // toTime(time) {
+  //   return time.substr(0, 2) + ':' + time.substr(2, 2) + ':' + time.substr(4, 2);
+  // }
 
   /**
  * 关闭弹窗
@@ -98,16 +101,21 @@ export class ChedanComponent implements OnInit {
    * 确认撤单
    */
   submitChedan() {
-    this.http.chedan(this.orderData.appointOrderCode).subscribe((res) => {
-      console.log(res);
-      this.data.ErrorMsg('提交成功');
+    if (!this.data.isNull(this.orderData.appointOrderCode)) {
+      this.http.chedan(this.orderData.appointOrderCode).subscribe((res) => {
+        console.log(res);
+        this.data.ErrorMsg('撤单已提交');
+        this.closeAlert();
+      }, (err) => {
+        this.data.error = err.error;
+        this.data.isError();
+      }, () => {
+        this.data.Loading(this.data.hide);
+      });
+    } else {
+      this.data.ErrorMsg('撤单失败');
       this.closeAlert();
-    }, (err) => {
-      this.data.error = err.error;
-      this.data.isError();
-    }, () => {
-      this.data.Loading(this.data.hide);
-    });
+    }
   }
 
 }

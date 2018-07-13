@@ -18,9 +18,6 @@ export class UsercenterComponent implements OnInit {
     this.data.clearInterval();
     this.userInfo = this.data.userInfo;
     this.usercenter();
-    this.data.intervalCapital = setInterval(() => {
-      this.usercenter();
-    }, 3000);
   }
 
   goto(url) {
@@ -30,6 +27,9 @@ export class UsercenterComponent implements OnInit {
   usercenter() {
     this.http.userCenter().subscribe((res: DataService['userInfo']) => {
       this.userInfo = res;
+      this.data.intervalCapital = setTimeout(() => {
+        this.usercenter();
+      }, 3000);
     }, (err) => {
       this.data.error = err.error;
       this.data.isError();

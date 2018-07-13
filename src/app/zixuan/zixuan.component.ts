@@ -34,9 +34,6 @@ export class ZixuanComponent implements OnInit {
     if (!this.data.isNull(this.zixuanList)) {
       this.hasZixuan = this.data.show;
       this.subscribe();
-      this.data.intervalZX = setInterval(() => {
-        this.subscribe();
-      }, 3000);
     }
 
   }
@@ -51,8 +48,10 @@ export class ZixuanComponent implements OnInit {
 
   subscribe() {
     this.http.zixuanSubscribe(this.zixuanList).subscribe((res) => {
-      console.log(res);
       this.getDetail();
+      this.data.intervalZX = setTimeout(() => {
+        this.subscribe();
+      }, 3000);
     }, (err) => {
       this.data.error = err.error;
       this.data.isError();
@@ -89,6 +88,14 @@ export class ZixuanComponent implements OnInit {
       }
     }
 
+  }
+
+  fontColor(string) {
+    if (string.indexOf('-') === -1) {
+      return 'red';
+    } else {
+      return 'green';
+    }
   }
 
 }

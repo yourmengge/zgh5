@@ -101,3 +101,9 @@
         margin-left: 60px;
     }
 }
+
+.zixuan-list{
+    height: calc(100vh - 146px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}

@@ -68,10 +68,10 @@
             </td>
             <td>
                 <p>
-                    {{a.appointPrice}}
+                    {{a.appointPrice | toFixed}}
                 </p>
                 <p>
-                    {{a.dealAvrPrice}}
+                    {{a.dealAvrPrice | toFixed}}
                 </p>
             </td>
             <td>
@@ -107,8 +107,8 @@
             <span>{{orderData.stockCode}}</span>
         </p>
         <p>
-            委托数量：
-            <span>{{orderData.appointCnt}}</span>
+            撤单数量：
+            <span>{{orderData.appointCnt - orderData.dealCnt}}</span>
         </p>
         <p>
             委托价格：

@@ -14,14 +14,15 @@ export class ChicangComponent implements OnInit {
   ngOnInit() {
     this.userInfo = this.data.userInfo;
     this.usercenter();
-    this.data.intervalCapital = setInterval(() => {
-      this.usercenter();
-    }, 3000);
+
   }
 
   usercenter() {
     this.http.userCenter().subscribe((res: DataService['userInfo']) => {
       this.userInfo = res;
+      this.data.intervalCapital = setTimeout(() => {
+        this.usercenter();
+      }, 3000);
     }, (err) => {
       this.data.error = err.error;
       this.data.isError();

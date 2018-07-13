@@ -33,9 +33,9 @@ export class SearchComponent implements OnInit {
     this.http.getAppoint('date=' + this.data.getTime('yyyyMMss', this.time)).subscribe((res) => {
       this.list = res;
       // tslint:disable-next-line:forin
-      for (const i in this.list) {
-        this.list[i].appointTime = this.toTime(this.list[i].appointTime);
-      }
+      // for (const i in this.list) {
+      //   this.list[i].appointTime = this.toTime(this.list[i].appointTime);
+      // }
     }, (err) => {
       this.data.error = err.error;
       this.data.isError();
@@ -64,8 +64,12 @@ export class SearchComponent implements OnInit {
 
   }
 
-  toTime(time) {
-    return time.substr(0, 2) + ':' + time.substr(2, 2) + ':' + time.substr(4, 2);
-  }
+  // toTime(time) {
+  //   if (time.length === 6) {
+  //     return time.substr(0, 2) + ':' + time.substr(2, 2) + ':' + time.substr(4, 2);
+  //   } else {
+  //     return time.substr(8, 2) + ':' + time.substr(10, 2) + ':' + time.substr(12, 2);
+  //   }
+  // }
 
 }

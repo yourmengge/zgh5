@@ -1,7 +1,7 @@
-import { Component, OnInit, DoCheck } from '@angular/core';
-import { DataService, Error, StockList } from '../data.service';
+import { Component, DoCheck } from '@angular/core';
+import { DataService, StockList } from '../data.service';
 import { HttpService } from '../http.service';
-import { Response, RequestOptions, Headers } from '@angular/http';
+import { Response } from '@angular/http';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 // tslint:disable-next-line:import-spacing
 import *  as SockJS from 'sockjs-client';
@@ -46,7 +46,7 @@ export class BuyComponent implements DoCheck {
     market = 'market';
     submitAlert: boolean;
     userName: string;
-
+    socketInterval: any;
     constructor(public data: DataService, public http: HttpService) {
         this.fullcount = '--';
         this.maxPrice = 10;
@@ -94,7 +94,7 @@ export class BuyComponent implements DoCheck {
         }
         if (this.stockCode.length === 0) {
             this.show = 'inactive';
-            this.cancelSubscribe();
+            this.clear();
         }
     }
 
@@ -104,12 +104,17 @@ export class BuyComponent implements DoCheck {
     buy() {
         if (this.data.isNull(this.stockCode)) {
             this.data.ErrorMsg('股票代码不能为空');
+        } else if (!Number.isInteger(this.appointPrice * 100)) {
+            this.data.ErrorMsg('委托价格不能超过两位小数');
         } else if (this.data.isNull(this.appointPrice)) {
             this.data.ErrorMsg('委托价格不能为空');
-        } else if (this.appointPrice < parseFloat(this.stockHQ.lowPrice)) {
+        } else if (this.appointPrice < parseFloat(this.stockHQ.lowPrice).toFixed(2)) {
             this.data.ErrorMsg('委托价格不能低于跌停价');
-        } else if (this.appointPrice > parseFloat(this.stockHQ.highPrice)) {
+        } else if (this.appointPrice > parseFloat(this.stockHQ.highPrice).toFixed(2)) {
             this.data.ErrorMsg('委托价格不能高于涨停价');
+        } else if (typeof (this.appointCnt) !== 'number') {
+            this.appointCnt = 0;
+            this.data.ErrorMsg(this.text + '数量必须是数字');
         } else if (this.appointCnt % 100 !== 0) {
             if (this.classType === 'SELL' && this.appointCnt === this.fullcount) {
                 this.submitAlert = this.data.show;
@@ -139,7 +144,7 @@ export class BuyComponent implements DoCheck {
         };
         this.http.order(this.classType, content).subscribe((res: Response) => {
             if (res['success']) {
-                this.data.ErrorMsg('委托成功');
+                this.data.ErrorMsg('委托已提交');
                 this.closeAlert();
                 this.clear();
             }
@@ -223,30 +228,40 @@ export class BuyComponent implements DoCheck {
      * 选取价格
      */
     selectPrice(price) {
-        this.appointPrice = parseFloat(price).toFixed(2);
+        if (typeof (price) === 'string') {
+            this.appointPrice = parseFloat(parseFloat(price).toFixed(2));
+        } else {
+            this.appointPrice = price;
+        }
     }
 
     /**
      * 模糊查询选择股票
      */
     selectGP(data: StockList) {
+        this.ccount = '';
+        this.appointCnt = '';
         this.show = 'inactive';
         this.stockCode = data.stockCode;
         this.stockName = data.stockName;
         this.appointPrice = '';
         this.data.Loading(this.data.show);
         this.http.getGPHQ(this.classType, this.stockCode).subscribe((res) => {
-            this.stockHQ = res['resultInfo']['quotation'];
-            this.stockHQ.lowPrice = this.stockHQ.preClosePrice * 0.9;
-            this.stockHQ.highPrice = this.stockHQ.preClosePrice * 1.1;
-            this.fullcount = res['resultInfo']['maxAppointCnt'];
-            if (this.appointPrice !== '') {
-                // tslint:disable-next-line:max-line-length
-                this.appointPrice = (this.appointPrice === this.stockHQ.lastPrice) ? parseFloat(this.stockHQ.lastPrice) : this.appointPrice;
+            if (!this.data.isNull(res['resultInfo']['quotation'])) {
+                this.stockHQ = res['resultInfo']['quotation'];
+                if (this.stockName.includes('ST')) {
+                    this.stockHQ.lowPrice = Math.round(this.stockHQ.preClosePrice * 95) / 100;
+                    this.stockHQ.highPrice = Math.round(this.stockHQ.preClosePrice * 105) / 100;
+                } else {
+                    this.stockHQ.lowPrice = Math.round(this.stockHQ.preClosePrice * 90) / 100;
+                    this.stockHQ.highPrice = Math.round(this.stockHQ.preClosePrice * 110) / 100;
+                }
+                this.fullcount = res['resultInfo']['maxAppointCnt'];
+                this.appointPrice = Math.round(parseFloat(this.stockHQ.lastPrice) * 100) / 100;
             } else {
-                this.appointPrice = this.stockHQ.lastPrice;
+                this.stockHQ = this.data.stockHQ;
             }
-            this.appointPrice = parseFloat(this.appointPrice);
+
         }, (err) => {
             this.data.error = err.error;
             this.data.isError();
@@ -258,6 +273,7 @@ export class BuyComponent implements DoCheck {
      * 取消订阅
      */
     cancelSubscribe() {
+        window.clearInterval(this.socketInterval);
         this.http.cancelSubscribe().subscribe((res) => {
         });
     }
@@ -269,25 +285,33 @@ export class BuyComponent implements DoCheck {
         const that = this;
         this.cancelSubscribe();
         const socket = new SockJS(this.http.ws);
-        const headers = { opUserCode: this.data.getOpUserCode(), pushType: this.market };
+        const headers = { token: this.data.getToken() };
         this.stompClient = over(socket);
         this.connectStatus = true;
         this.stompClient.connect(headers, function (frame) {
-            console.log('Connected: ' + frame);
-            that.stompClient.subscribe('/user/' + that.data.getOpUserCode() + '/topic/market', function (res) {
+            // console.log('Connected: ' + frame);
+            that.stompClient.subscribe('/user/' + that.data.getToken() + '/topic/market', function (res) {
                 that.stockHQ = JSON.parse(res.body);
-                that.stockHQ.lowPrice = that.stockHQ.preClosePrice * 0.9;
-                that.stockHQ.highPrice = that.stockHQ.preClosePrice * 1.1;
-                if (that.appointPrice !== '') {
-                    // tslint:disable-next-line:max-line-length
-                    that.appointPrice = (that.appointPrice === that.stockHQ.lastPrice) ? parseFloat(that.stockHQ.lastPrice) : that.appointPrice;
+                if (that.stockName.includes('ST')) {
+                    that.stockHQ.lowPrice = Math.round(that.stockHQ.preClosePrice * 95) / 100;
+                    that.stockHQ.highPrice = Math.round(that.stockHQ.preClosePrice * 105) / 100;
                 } else {
-                    that.appointPrice = that.stockHQ.lastPrice;
+                    that.stockHQ.lowPrice = Math.round(that.stockHQ.preClosePrice * 90) / 100;
+                    that.stockHQ.highPrice = Math.round(that.stockHQ.preClosePrice * 110) / 100;
                 }
-                that.appointPrice = parseFloat(that.appointPrice);
+                // if (that.appointPrice !== '') {
+                //     // tslint:disable-next-line:max-line-length
+                // tslint:disable-next-line:max-line-length
+                //     that.appointPrice = (that.appointPrice === that.stockHQ.lastPrice) ? parseFloat(that.stockHQ.lastPrice) : that.appointPrice;
+                // } else {
+                //     that.appointPrice = that.stockHQ.lastPrice;
+                // }
+                // that.appointPrice = parseFloat(that.appointPrice);
+
             });
-
-
+            this.socketInterval = setInterval(() => {
+                that.stompClient.send(' ');
+            }, 60000);
         }, function (err) {
             console.log('err', err);
         });

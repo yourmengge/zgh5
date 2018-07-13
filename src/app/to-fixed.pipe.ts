@@ -6,8 +6,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ToFixedPipe implements PipeTransform {
 
   transform(value: any, args?: any): any {
-    if (value !== '--' && value !== '') {
-      return parseFloat(value).toFixed(2);
+    if (value !== '--' && value !== '' && value !== '-') {
+      return Math.round(parseFloat(value) * 100) / 100;
     } else {
       return value;
     }

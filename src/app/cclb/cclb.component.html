@@ -16,7 +16,8 @@
 		</tr>
 		<tr *ngFor='let a of list'>
 			<td>
-				{{a.stockName}}
+				<p>{{a.stockCode}}</p>
+				<p>{{a.stockName}}</p>
 			</td>
 			<td class="{{a.profit < 0?'green':'red'}}">
 				{{a.profit}}
@@ -31,10 +32,10 @@
 			</td>
 			<td>
 				<p>
-					{{a.costPrice}}
+					{{a.costPrice | toFixed}}
 				</p>
 				<p>
-					{{a.lastPrice}}
+					{{a.lastPrice | toFixed}}
 				</p>
 			</td>
 		</tr>

@@ -18,15 +18,16 @@ export class HttpService {
   constructor(public http: HttpClient, public data: DataService) {
   }
 
-  POST(data) {
-    return this.http.post(this.host, data);
+  POST(url, data) {
+    this.data.getHeader();
+    return this.http.post(url, data, this.data.getHeader());
   }
 
   /**
    * 请求股票行情
    */
   getGPHQ(type, code) {
-    return this.http.post(this.host + 'push/subsMarket/' + type + '/' + code, {}, this.data.getHeader());
+    return this.POST(this.host + 'push/subsMarket/' + type + '/' + code, {});
   }
 
   /**
@@ -49,49 +50,49 @@ export class HttpService {
    * 模糊查询股票
    */
   searchStock(code) {
-    return this.http.post(this.host + 'stock?input=' + code, {}, this.data.getHeader());
+    return this.POST(this.host + 'stock?input=' + code, {});
   }
 
   /**
    * 下单 参数 买入：BUY 卖出：SELL
    */
   order(type, data) {
-    return this.http.post(this.host + 'appoint/' + type, data, this.data.getHeader());
+    return this.POST(this.host + 'appoint/' + type, data);
   }
 
   /**
    * 取消订阅
    */
   cancelSubscribe() {
-    return this.http.post(this.host + 'push/unsubsMarket', {}, this.data.getHeader());
+    return this.POST(this.host + 'push/unsubsMarket', {});
   }
 
   /**
    * 查询持仓
    */
   getHold() {
-    return this.http.post(this.host + 'hold', {}, this.data.getHeader());
+    return this.POST(this.host + 'hold', {});
   }
 
   /**
    * 查询委托
    */
   getAppoint(time) {
-    return this.http.post(this.host + 'appointHis?' + time, {}, this.data.getHeader());
+    return this.POST(this.host + 'appointHis?' + time, {});
   }
 
   /**
    * 个人中心
    */
   userCenter() {
-    return this.http.post(this.host + 'capital', {}, this.data.getHeader());
+    return this.POST(this.host + 'capital', {});
   }
 
   /**
    * 确认撤单
    */
   chedan(code) {
-    return this.http.post(this.host + 'cancel/' + code, {}, this.data.getHeader());
+    return this.POST(this.host + 'cancel/' + code, {});
   }
 
   /**
