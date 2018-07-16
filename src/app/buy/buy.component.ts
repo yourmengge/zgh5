@@ -3,6 +3,7 @@ import { DataService, StockList } from '../data.service';
 import { HttpService } from '../http.service';
 import { Response } from '@angular/http';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+
 // tslint:disable-next-line:import-spacing
 import *  as SockJS from 'sockjs-client';
 import { over } from '@stomp/stompjs';
@@ -74,6 +75,7 @@ export class BuyComponent implements DoCheck {
     ngOnDestroy() {
         console.log('destroy');
         this.cancelSubscribe();
+        this.disconnect();
     }
 
     /**
@@ -275,7 +277,18 @@ export class BuyComponent implements DoCheck {
     cancelSubscribe() {
         window.clearInterval(this.socketInterval);
         this.http.cancelSubscribe().subscribe((res) => {
+            console.log('取消订阅');
         });
+    }
+
+    /**
+     * 断开连接
+     */
+    disconnect() {
+        this.stompClient.disconnect((() => {
+            console.log('断开链接');
+            window.clearInterval(this.socketInterval);
+        }));
     }
     /**
      * 连接ws

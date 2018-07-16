@@ -11,7 +11,8 @@ import { DataService } from './data.service';
 export class HttpService {
   stompClient: any;
   // public host = 'http://192.168.88.148:8080';
-  public host = 'http://218.85.23.217:8082/tnproxy/';
+  // public host = 'http://218.85.23.217:8082/tnproxy/';
+  public host = 'http://192.168.1.104:8082/tnproxy/';
   public ws = this.host + 'webSocket';
   public stockHQ: any;
 
@@ -30,14 +31,7 @@ export class HttpService {
     return this.POST(this.host + 'push/subsMarket/' + type + '/' + code, {});
   }
 
-  /**
-   * 断开连接
-   */
-  disconnect() {
-    this.stompClient.disconnect((() => {
-      console.log('断开链接');
-    }));
-  }
+
 
   /**
    * 登录接口
