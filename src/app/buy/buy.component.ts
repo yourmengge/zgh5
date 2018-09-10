@@ -106,7 +106,7 @@ export class BuyComponent implements DoCheck {
     buy() {
         if (this.data.isNull(this.stockCode)) {
             this.data.ErrorMsg('股票代码不能为空');
-        } else if (!Number.isInteger(this.appointPrice * 100)) {
+        } else if (this.data.Decimal(this.appointPrice) > 2) {
             this.data.ErrorMsg('委托价格不能超过两位小数');
         } else if (this.data.isNull(this.appointPrice)) {
             this.data.ErrorMsg('委托价格不能为空');
@@ -285,10 +285,12 @@ export class BuyComponent implements DoCheck {
      * 断开连接
      */
     disconnect() {
-        this.stompClient.disconnect((() => {
-            console.log('断开链接');
-            window.clearInterval(this.socketInterval);
-        }));
+        if (this.connectStatus) {
+            this.stompClient.disconnect((() => {
+                console.log('断开链接');
+                window.clearInterval(this.socketInterval);
+            }));
+        }
     }
     /**
      * 连接ws

@@ -136,6 +136,18 @@ export class DataService {
   }
 
   /**
+   * 判断有几位小数
+   */
+  Decimal(num) {
+    num = num + '';
+    if (num.indexOf('.') !== -1) {
+      return num.split('.')[1].length;
+    } else {
+      return 0;
+    }
+  }
+
+  /**
    * 底部菜单栏
    */
   getFooterMenu() {
