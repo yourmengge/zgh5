@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { $WebSocket } from 'angular2-websocket/angular2-websocket';
-import { over } from '@stomp/stompjs';
 import { HttpClient } from '@angular/common/http';
-// tslint:disable-next-line:import-spacing
-import *  as SockJS from 'sockjs-client';
 import { DataService } from './data.service';
 
 @Injectable()
