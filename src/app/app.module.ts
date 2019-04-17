@@ -25,6 +25,7 @@ import { AlertComponent } from './alert/alert.component';
 import { LoadingComponent } from './loading/loading.component';
 import { NumIntPipe } from './num-int.pipe';
 import { ToFixedPipe } from './to-fixed.pipe';
+import { UserdetialComponent } from './userdetial/userdetial.component';
 
 const jiaoyiChildRoutes: Routes = [
   { path: 'chicang', component: ChicangComponent },
@@ -44,6 +45,7 @@ const appChildRoutes: Routes = [
 ];
 
 const appRoutes: Routes = [
+  { path: 'userdetail', component: UserdetialComponent },
   { path: 'usercenter', component: UsercenterComponent },
   { path: 'main', component: MainComponent, children: appChildRoutes },
   { path: 'login', component: LoginComponent },
@@ -68,7 +70,8 @@ const appRoutes: Routes = [
     AlertComponent,
     LoadingComponent,
     NumIntPipe,
-    ToFixedPipe
+    ToFixedPipe,
+    UserdetialComponent
   ],
   imports: [
     BrowserAnimationsModule,

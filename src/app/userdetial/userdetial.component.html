@@ -1,0 +1,88 @@
+<div class="navigation">
+  <div class="back" (click)='back()'></div>
+  <p class="navigation-title">个人详情</p>
+</div>
+<div class="content">
+  <div class="cell-list">
+    <div class="list-item">
+      <span class="list-item-name">
+        期初规模
+      </span>
+      <span class="list-item-content">
+        {{detail.allottedScale}}
+      </span>
+    </div>
+    <div class="list-item">
+      <span class="list-item-name">
+        总资产
+      </span>
+      <span class="list-item-content">
+        {{detail.totalScale}}
+      </span>
+    </div>
+    <div class="list-item">
+      <span class="list-item-name">
+        股票市值
+      </span>
+      <span class="list-item-content">
+        {{detail.stockScale}}
+      </span>
+    </div>
+    <div class="list-item">
+      <span class="list-item-name">
+        警戒线
+      </span>
+      <span class="list-item-content">
+        {{detail.cordonLine}}
+      </span>
+    </div>
+    <div class="list-item">
+      <span class="list-item-name">
+        平仓线
+      </span>
+      <span class="list-item-content">
+        {{detail.flatLine}}
+      </span>
+    </div>
+    <div class="list-item">
+      <span class="list-item-name">
+        主板持仓比例
+      </span>
+      <span class="list-item-content">
+        {{detail.mainSingleVote}}
+      </span>
+    </div>
+    <div class="list-item">
+      <span class="list-item-name">
+        创业板持仓比例
+      </span>
+      <span class="list-item-content">
+        {{detail.growthSingleVote}}
+      </span>
+    </div>
+    <div class="list-item">
+      <span class="list-item-name">
+        可用资金
+      </span>
+      <span class="list-item-content">
+        {{detail.ableScale}}
+      </span>
+    </div>
+    <div class="list-item">
+      <span class="list-item-name">
+        冻结资金
+      </span>
+      <span class="list-item-content">
+        {{detail.lockScale}}
+      </span>
+    </div>
+    <div class="list-item">
+      <span class="list-item-name">
+        盈亏
+      </span>
+      <span class="list-item-content">
+        {{detail.profit}}
+      </span>
+    </div>
+  </div>
+</div>

@@ -47,4 +47,8 @@ export class UsercenterComponent implements OnInit {
     }, 1000);
   }
 
+  detail() {
+    this.data.goto('userdetail');
+  }
+
 }

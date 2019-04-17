@@ -135,6 +135,10 @@ export class DataService {
     return this.router.navigate([url]);
   }
 
+  back() {
+    window.history.back();
+  }
+
   /**
    * 判断有几位小数
    */

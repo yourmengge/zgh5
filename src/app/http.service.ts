@@ -7,7 +7,7 @@ export class HttpService {
   stompClient: any;
   // public host = 'http://192.168.88.148:8080';
   // public host = 'http://218.85.23.217:8082/tnproxy/';
-  public host = 'http://120.79.215.170:10008/t0proxy/';
+  public host = 'http://120.79.215.170:10008/tnproxy/';
   public ws = this.host + 'webSocket';
   public stockHQ: any;
 

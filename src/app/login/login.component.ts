@@ -17,6 +17,17 @@ export class LoginComponent implements OnInit {
     'Authorization': ''
   };
   constructor(public data: DataService, public http: HttpService) {
+    if (!this.data.isNull(this.data.getLocalStorage('userPhone'))) {
+      this.phone = this.data.getLocalStorage('userPhone');
+    } else {
+      this.phone = '';
+    }
+    if (!this.data.isNull(this.data.getLocalStorage('password'))) {
+      this.password = this.data.getLocalStorage('password');
+    } else {
+      this.password = '';
+    }
+
   }
 
   ngOnInit() {
@@ -39,6 +50,8 @@ export class LoginComponent implements OnInit {
         this.data.setSession('opUserCode', this.phone);
         this.data.opUserCode = this.phone;
         this.data.token = res['resultInfo'];
+        this.data.setLocalStorage('userPhone', this.phone);
+        this.data.setLocalStorage('password', this.password);
         this.data.setSession('token', this.data.token);
         // this.header = {
         //   'Authorization': res['itg']['token']
