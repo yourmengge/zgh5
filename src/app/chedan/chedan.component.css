@@ -1,31 +1,22 @@
-.chedang-div div {
-    flex: 1;
-}
-
-.chedang-div div p {
-    margin: 10px 0;
-    margin-left: 20px;
-}
-
 .cclb {
     background: #fff;
-}
-
-.cclb table {
+  }
+  
+  .cclb table {
     width: 100%;
     font-size: .9rem;
     text-align: center;
-}
-
-.cclb table tr {
+  }
+  
+  .cclb table tr {
     height: 36px;
-}
-
-.cclb table tr:first-child {
+  }
+  
+  .cclb table tr:first-child {
     background: #ececec;
-}
-
-.span {
+  }
+  
+  .span {
     float: left;
     margin-top: 14px;
     font-size: .7rem;
@@ -38,9 +29,72 @@
     margin-left: 2px;
     color: #b00e23;
     margin-right: 2px;
-}
-
-.blue {
+  }
+  
+  .blue {
     color: #145c90 !important;
     border: solid 1px #145c90 !important;
-}
+  }
+  
+  .zichan {
+    background: #fff;
+    color: #333;
+    width: 100vw;
+    text-align: center;
+    padding: 14px 0px;
+    font-size: 1rem;
+    border-bottom: solid 1px #e6e6e6;
+  }
+  
+  .zichan div {
+    font-size: .85rem;
+    flex: 1;
+    border-right: solid 1px #e6e6e6;
+  }
+  
+  .zichan div:last-child {
+    border-right: none;
+  }
+  
+  .zichan p {
+    margin: 4px 0;
+  }
+  
+  .chedan-div {
+    text-align: left;
+    padding: 5px 0;
+    border-bottom: solid 1px #e0e0e0;
+    background: #fff;
+  }
+  
+  .chedan-div p {
+    font-size: .9rem;
+    margin: 5px 10px;
+  }
+  
+  .chedan-div p span {
+    display: inline-block;
+    width: 130px;
+  }
+  
+  .chedan-button {
+    font-size: .9rem;
+    float: right;
+    margin-top: -62px;
+    margin-right: 11px;
+    border: solid 1px #b00e23;
+    color: #b00e23;
+    background: none;
+    padding: 2px 9px;
+    border-radius: 5px;
+  }
+  
+  .chedan-button:active {
+    color: #fff;
+    background: #b00e23;
+  }
+  
+  .blue:active{
+    color: #fff;
+    background: #145c90;
+  }
