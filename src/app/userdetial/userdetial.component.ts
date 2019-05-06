@@ -19,7 +19,10 @@ export class UserdetialComponent implements OnInit {
     ableScale: 0,
     lockScale: '',
     profit: 0,
-    remainCashScale: 0
+    remainCashScale: 0,
+    calcCordonLine: 0,
+    cashScale: 0,
+    calcFlatLine: 0
   };
   constructor(public data: DataService, public http: HttpService) { }
 
