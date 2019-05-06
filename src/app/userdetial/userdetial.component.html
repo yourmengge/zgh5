@@ -33,7 +33,31 @@
         警戒线
       </span>
       <span class="list-item-content">
+        {{detail.calcCordonLine}}
+      </span>
+    </div>
+    <!-- <div class="list-item">
+      <span class="list-item-name">
+        剩余保证金比例
+      </span>
+      <span class="list-item-content">
         {{detail.cordonLine}}
+      </span>
+    </div> -->
+    <div class="list-item">
+      <span class="list-item-name">
+        保证金
+      </span>
+      <span class="list-item-content">
+        {{detail.cashScale}}
+      </span>
+    </div>
+    <div class="list-item">
+      <span class="list-item-name">
+        剩余保证金
+      </span>
+      <span class="list-item-content">
+        {{detail.remainCashScale}}
       </span>
     </div>
     <div class="list-item">
@@ -41,12 +65,12 @@
         平仓线
       </span>
       <span class="list-item-content">
-        {{detail.flatLine}}
+        {{detail.calcFlatLine}}
       </span>
     </div>
     <div class="list-item">
       <span class="list-item-name">
-        主板持仓比例
+        主板单票比例
       </span>
       <span class="list-item-content">
         {{detail.mainSingleVote}}
@@ -54,7 +78,7 @@
     </div>
     <div class="list-item">
       <span class="list-item-name">
-        创业板持仓比例
+        创业板合计比例
       </span>
       <span class="list-item-content">
         {{detail.growthSingleVote}}

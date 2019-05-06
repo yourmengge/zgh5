@@ -18,7 +18,8 @@ export class UserdetialComponent implements OnInit {
     growthSingleVote: 0,
     ableScale: 0,
     lockScale: '',
-    profit: 0
+    profit: 0,
+    remainCashScale: 0
   };
   constructor(public data: DataService, public http: HttpService) { }
 

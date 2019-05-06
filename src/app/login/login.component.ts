@@ -10,7 +10,7 @@ import { Md5 } from 'ts-md5/dist/md5';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
+  logo = '';
   public phone: string;
   public password: string;
   public header = {
@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
     } else {
       this.password = '';
     }
+    this.logo = this.data.logo;
 
   }
 

@@ -5,7 +5,7 @@ import { HttpHeaders } from '@angular/common/http';
 @Injectable()
 
 export class DataService {
-
+  logo = 'login';
   alert = false;
   loading = false;
   errMsg = '出错啦';
@@ -117,6 +117,15 @@ export class DataService {
       this.opUserCode = this.getSession('opUserCode');
       const response = this.getSession('userInfo');
       this.token = '';
+    }
+    this.initLogo();
+  }
+
+  initLogo() {
+    if (window.location.host.indexOf('tiaotie') > 0) { // 东方期权
+      this.logo = 'tiaotie';
+    } else {
+      this.logo = 'login';
     }
   }
 

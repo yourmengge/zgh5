@@ -9,9 +9,11 @@ import { HttpService } from '../http.service';
 })
 export class UsercenterComponent implements OnInit {
   public menuList: any;
+  logo = '';
   public userInfo: DataService['userInfo'];
   constructor(public data: DataService, public http: HttpService) {
     this.menuList = this.data.getCenterMenuList();
+    this.logo = this.data.logo;
   }
 
   ngOnInit() {
