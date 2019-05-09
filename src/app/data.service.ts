@@ -12,6 +12,8 @@ export class DataService {
   error: Error;
   show = true;
   hide = false;
+  searchStockCode = '';
+  sellCnt = '';
   token: string;
   intervalCapital: any; // 个人中心
   intervalHold: any;  // 持仓
@@ -19,11 +21,12 @@ export class DataService {
   intervalZX: any; // 自选股
   nowUrl: string;
   market: 'market'; // 行情的ws，header
-
+  timeoutFenshi: any;
   /**
    * 股票行情
    */
   stockHQ = {
+    'stockName': '',
     'closePrice': '',
     'highPrice': '',
     'lowPrice': '',
@@ -119,6 +122,65 @@ export class DataService {
       this.token = '';
     }
     this.initLogo();
+  }
+
+  resetStockHQ() {
+    this.stockHQ = {
+      'stockName': '',
+      'closePrice': '',
+      'highPrice': '',
+      'lowPrice': '',
+      'lastPrice': '',
+      'openPrice': '',
+      'orderTime': '',
+      'preClosePrice': '',
+      'stockCode': '',
+      'buyLevel': {
+        'buyPrice01': '--',
+        'buyPrice02': '--',
+        'buyPrice03': '--',
+        'buyPrice04': '--',
+        'buyPrice05': '--',
+        'buyPrice06': '--',
+        'buyPrice07': '--',
+        'buyPrice08': '--',
+        'buyPrice09': '--',
+        'buyPrice10': '--',
+        'buyVolume01': '--',
+        'buyVolume02': '--',
+        'buyVolume03': '--',
+        'buyVolume04': '--',
+        'buyVolume05': '--',
+        'buyVolume06': '--',
+        'buyVolume07': '--',
+        'buyVolume08': '--',
+        'buyVolume09': '--',
+        'buyVolume10': '--'
+      },
+      'sellLevel': {
+        'sellPrice01': '--',
+        'sellPrice02': '--',
+        'sellPrice03': '--',
+        'sellPrice04': '--',
+        'sellPrice05': '--',
+        'sellPrice06': '--',
+        'sellPrice07': '--',
+        'sellPrice08': '--',
+        'sellPrice09': '--',
+        'sellPrice10': '--',
+        'sellVolume01': '--',
+        'sellVolume02': '--',
+        'sellVolume03': '--',
+        'sellVolume04': '--',
+        'sellVolume05': '--',
+        'sellVolume06': '--',
+        'sellVolume07': '--',
+        'sellVolume08': '--',
+        'sellVolume09': '--',
+        'sellVolume10': '--'
+      }
+
+    };
   }
 
   initLogo() {
@@ -411,6 +473,7 @@ export class DataService {
     window.clearTimeout(this.intervalCapital);
     window.clearTimeout(this.intervalHold);
     window.clearTimeout(this.intervalZX);
+    window.clearTimeout(this.timeoutFenshi);
   }
 }
 export interface Error {

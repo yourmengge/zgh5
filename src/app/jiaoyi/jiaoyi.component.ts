@@ -29,6 +29,9 @@ export class JiaoyiComponent implements DoCheck {
   }
 
   goto(url) {
+    this.data.sellCnt = '';
+    this.data.searchStockCode = '';
+    this.data.resetStockHQ();
     this.url = url;
     this.data.goto('main/jiaoyi/' + url);
   }

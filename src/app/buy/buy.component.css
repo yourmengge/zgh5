@@ -132,3 +132,44 @@
 .SELL .add-down div {
     background: #145c90;
 }
+
+.fenshi-div {
+    background: #fff;
+}
+
+.fenshi-div p {
+    padding: 5px 10px;
+    margin: 5px 0;
+}
+
+.shifen2 {
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #333;
+    background: #fff;
+}
+
+.fenshi-div2 p {
+    padding: 0;
+    margin: 00;
+}
+
+.active {
+    color: #b00e23 !important;
+    border-bottom: solid 1px #b00e23;
+}
+
+.shifen2 span {
+    flex: 1;
+}
+
+.greenFont {
+    color: green !important;
+}
+
+.redFont {
+    color: #b00e23 !important;
+}

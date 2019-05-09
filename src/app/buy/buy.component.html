@@ -1,7 +1,21 @@
+<div class="fenshi-div" *ngIf="showChart">
+	<p class="shifen">最新价：{{stockHQ.lastPrice | toFixed}} <span [class]='color(stockHQ.upDiff)'>{{stockHQ.upDiff}}</span>
+		<span [class]='color(stockHQ.upRatio)'>{{stockHQ.upRatio}}</span></p>
+	<!-- <canvas style="margin-left:10px;" id="trendLine"></canvas> -->
+</div>
+<div class="fenshi-div2" *ngIf="showChart">
+	<p class="shifen2">
+		<span *ngFor="let item of chartTypeList" [class]='item.type == chartType?"active":""'
+			(click)='changeType(item.type)'>{{item.name}}</span>
+	</p>
+	<!-- <canvas style="margin-left:10px;" id="trendLine"></canvas> -->
+	<div id="chart"></div>
+</div>
 <div class="content">
 	<div class="left-div {{classType}}">
 		<div>
-			<input class="input" (keyup)='getQuotation()' maxlength="6" type="text" placeholder="股票代码/首字母" [(ngModel)]='stockCode'>
+			<input class="input" (keyup)='getQuotation()' maxlength="6" type="text" placeholder="股票代码/首字母"
+				[(ngModel)]='stockCode'>
 			<span class="gpmc">{{stockName}}</span>
 		</div>
 		<div class="search-div" [@showDelete]="show">
@@ -19,7 +33,8 @@
 		</div>
 		<div class="add-down">
 			<div class="down" (click)='count(-1)'>-</div>
-			<input class="input" type="number" placeholder="{{text}}价" [(ngModel)]='appointPrice' style="text-align: center">
+			<input class="input" type="number" placeholder="{{text}}价" [(ngModel)]='appointPrice'
+				style="text-align: center">
 			<div class="add" (click)='count(1)'>+</div>
 		</div>
 		<div class="green-red">

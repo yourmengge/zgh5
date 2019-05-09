@@ -3,10 +3,11 @@ import { DataService, StockList } from '../data.service';
 import { HttpService } from '../http.service';
 import { Response } from '@angular/http';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-
-// tslint:disable-next-line:import-spacing
-import *  as SockJS from 'sockjs-client';
+declare var EmchartsMobileTime: any;
+declare var EmchartsMobileK: any;
+import * as SockJS from 'sockjs-client';
 import { over } from '@stomp/stompjs';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
     selector: 'app-buy',
@@ -48,6 +49,27 @@ export class BuyComponent implements DoCheck {
     submitAlert: boolean;
     userName: string;
     socketInterval: any;
+
+    showChart = false; // 展示分时图
+    showLine = false;
+
+    chartTypeList = [{
+        name: '分时',
+        type: 'T1'
+    }, {
+        name: '五日',
+        type: 'T5'
+    }, {
+        name: '日K',
+        type: 'DK'
+    }, {
+        name: '周K',
+        type: 'WK'
+    }, {
+        name: '月K',
+        type: 'MK'
+    }];
+    chartType = 'T1';
     constructor(public data: DataService, public http: HttpService) {
         this.fullcount = '--';
         this.maxPrice = 10;
@@ -57,6 +79,7 @@ export class BuyComponent implements DoCheck {
         this.connectStatus = false;
         this.submitAlert = this.data.hide;
         this.userName = this.data.getOpUserCode();
+        this.connect();
     }
 
     ngDoCheck() {
@@ -69,6 +92,43 @@ export class BuyComponent implements DoCheck {
             this.classType = 'SELL';
             this.text2 = '卖';
         }
+        if (this.data.searchStockCode !== '' && this.data.searchStockCode.length === 6 && this.data.searchStockCode !== this.stockCode) {
+            this.stockCode = this.data.searchStockCode;
+            this.getGPHQ();
+        }
+    }
+    getGPHQ() {
+        this.showChart = true;
+        this.show = 'inactive';
+        this.data.Loading(this.data.show);
+        window.clearTimeout(this.data.timeoutFenshi);
+        this.http.getGPHQ(this.classType, this.stockCode).subscribe((res) => {
+            if (this.stockCode.length === 6) {
+                this.getFenshituList();
+            }
+            if (!this.data.isNull(res['resultInfo']['quotation'])) {
+                this.stockHQ = res['resultInfo']['quotation'];
+                this.stockName = this.stockHQ.stockName;
+                this.stockHQ.upRatio = res['resultInfo']['upRatio'];
+                if (this.stockName.includes('ST')) {
+                    this.stockHQ.lowPrice = Math.round(this.stockHQ.preClosePrice * 95) / 100;
+                    this.stockHQ.highPrice = Math.round(this.stockHQ.preClosePrice * 105) / 100;
+                } else {
+                    this.stockHQ.lowPrice = Math.round(this.stockHQ.preClosePrice * 90) / 100;
+                    this.stockHQ.highPrice = Math.round(this.stockHQ.preClosePrice * 110) / 100;
+                }
+                this.fullcount = res['resultInfo']['maxAppointCnt'];
+                this.appointPrice = Math.round(parseFloat(this.stockHQ.lastPrice) * 100) / 100;
+            } else {
+                this.stockHQ = this.data.stockHQ;
+            }
+
+        }, (err) => {
+            this.data.error = err.error;
+            this.data.isError();
+        }, () => {
+            this.data.Loading(this.data.hide);
+        });
     }
 
     // tslint:disable-next-line:use-life-cycle-interface
@@ -79,23 +139,32 @@ export class BuyComponent implements DoCheck {
     }
 
     /**
-     * 获取行情快照
+     * 获取股票列表
      */
     getQuotation() {
+        this.data.searchStockCode = '';
+        this.stockHQ.lastPrice = '';
+        this.stockHQ.upRatio = '';
         this.stockName = '';
         this.show = 'active';
-        const content = null;
+        window.clearTimeout(this.data.timeoutFenshi);
+        this.cancelSubscribe();
         this.http.searchStock(this.stockCode).subscribe((res) => {
             this.list = res;
+            // if (this.stockCode.length === 6 && !this.data.isNull(this.list[0])) {
+            //     this.selectGP(this.list[0]);
+            // }
         }, (err) => {
             this.data.error = err.error;
             this.data.isError();
         });
         if (!this.connectStatus) {
-            this.connect();
+
         }
+
         if (this.stockCode.length === 0) {
             this.show = 'inactive';
+            this.showChart = false;
             this.clear();
         }
     }
@@ -186,12 +255,16 @@ export class BuyComponent implements DoCheck {
      * 清空
      */
     clear() {
+        window.clearTimeout(this.data.timeoutFenshi);
+        this.showChart = false;
         this.stockCode = '';
         this.appointPrice = '';
         this.appointCnt = '';
         this.ccount = '';
         this.stockName = '';
         this.fullcount = '--';
+        this.data.resetStockHQ();
+        this.data.searchStockCode = '';
         this.stockHQ = this.data.stockHQ;
         this.cancelSubscribe();
     }
@@ -241,35 +314,9 @@ export class BuyComponent implements DoCheck {
      * 模糊查询选择股票
      */
     selectGP(data: StockList) {
-        this.ccount = '';
-        this.appointCnt = '';
-        this.show = 'inactive';
         this.stockCode = data.stockCode;
-        this.stockName = data.stockName;
         this.appointPrice = '';
-        this.data.Loading(this.data.show);
-        this.http.getGPHQ(this.classType, this.stockCode).subscribe((res) => {
-            if (!this.data.isNull(res['resultInfo']['quotation'])) {
-                this.stockHQ = res['resultInfo']['quotation'];
-                if (this.stockName.includes('ST')) {
-                    this.stockHQ.lowPrice = Math.round(this.stockHQ.preClosePrice * 95) / 100;
-                    this.stockHQ.highPrice = Math.round(this.stockHQ.preClosePrice * 105) / 100;
-                } else {
-                    this.stockHQ.lowPrice = Math.round(this.stockHQ.preClosePrice * 90) / 100;
-                    this.stockHQ.highPrice = Math.round(this.stockHQ.preClosePrice * 110) / 100;
-                }
-                this.fullcount = res['resultInfo']['maxAppointCnt'];
-                this.appointPrice = Math.round(parseFloat(this.stockHQ.lastPrice) * 100) / 100;
-            } else {
-                this.stockHQ = this.data.stockHQ;
-            }
-
-        }, (err) => {
-            this.data.error = err.error;
-            this.data.isError();
-        }, () => {
-            this.data.Loading(this.data.hide);
-        });
+        this.getGPHQ();
     }
     /**
      * 取消订阅
@@ -307,6 +354,7 @@ export class BuyComponent implements DoCheck {
             // console.log('Connected: ' + frame);
             that.stompClient.subscribe('/user/' + that.data.getToken() + '/topic/market', function (res) {
                 that.stockHQ = JSON.parse(res.body);
+                that.stockName = that.stockHQ.stockName;
                 if (that.stockName.includes('ST')) {
                     that.stockHQ.lowPrice = Math.round(that.stockHQ.preClosePrice * 95) / 100;
                     that.stockHQ.highPrice = Math.round(that.stockHQ.preClosePrice * 105) / 100;
@@ -353,5 +401,64 @@ export class BuyComponent implements DoCheck {
      */
     inputCnt() {
         this.ccount = '';
+    }
+
+    KLine() {
+        const marketType = (this.stockCode.substr(0, 1) === '5' || this.stockCode.substr(0, 1) === '6') ? '1' : '2';
+        const chart = new EmchartsMobileK({
+            container: 'chart',
+            type: this.chartType,
+            code: `${this.stockCode}${marketType}`,
+            width: document.body.clientWidth,
+            height: 200,
+            dpr: 2,
+            showVMark: true
+        });
+        // 调用绘图方法
+        chart.draw();
+
+        this.data.timeoutFenshi = setTimeout(() => {
+            this.KLine();
+        }, 30000);
+    }
+
+    getFenshituList() {
+        const marketType = (this.stockCode.substr(0, 1) === '5' || this.stockCode.substr(0, 1) === '6') ? '1' : '2';
+        const chart = new EmchartsMobileTime({
+            container: 'chart',
+            type: this.chartType,
+            code: `${this.stockCode}${marketType}`,
+            width: document.body.clientWidth,
+            height: 180,
+            dpr: 2
+        });
+        // 调用绘图方法
+        chart.draw();
+
+        this.data.timeoutFenshi = setTimeout(() => {
+            this.getFenshituList();
+        }, 30000);
+    }
+
+    changeType(type) {
+        window.clearTimeout(this.data.timeoutFenshi);
+        this.chartType = type;
+        if (this.chartType === 'T1' || this.chartType === 'T5') {
+            this.getFenshituList();
+        } else {
+            this.KLine();
+        }
+    }
+
+    color(string) {
+
+        if (!this.data.isNull(string)) {
+            string = string.toString();
+            if (string.indexOf('-') >= 0) {
+                return 'greenFont';
+            } else {
+                return 'redFont';
+            }
+        }
     }
 }
