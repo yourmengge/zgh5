@@ -184,7 +184,7 @@ export class DataService {
   }
 
   initLogo() {
-    if (window.location.host.indexOf('tiaotie') > 0) { // 东方期权
+    if (window.location.host.indexOf('47.103.29.17') >= 0) {
       this.logo = 'tiaotie';
     } else {
       this.logo = 'login';
