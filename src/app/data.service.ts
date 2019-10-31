@@ -184,7 +184,7 @@ export class DataService {
   }
 
   initLogo() {
-    if (window.location.host.indexOf('47.103.29.17') >= 0) {
+    if (window.location.host.indexOf('flashtrading') >= 0) {
       this.logo = 'tiaotie';
     } else {
       this.logo = 'login';
