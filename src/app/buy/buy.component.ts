@@ -7,7 +7,6 @@ declare var EmchartsMobileTime: any;
 declare var EmchartsMobileK: any;
 import * as SockJS from 'sockjs-client';
 import { over } from '@stomp/stompjs';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
     selector: 'app-buy',
@@ -110,13 +109,13 @@ export class BuyComponent implements DoCheck {
                 this.stockHQ = res['resultInfo']['quotation'];
                 this.stockName = this.stockHQ.stockName;
                 this.stockHQ.upRatio = res['resultInfo']['upRatio'];
-                if (this.stockName.includes('ST')) {
-                    this.stockHQ.lowPrice = Math.round(this.stockHQ.preClosePrice * 95) / 100;
-                    this.stockHQ.highPrice = Math.round(this.stockHQ.preClosePrice * 105) / 100;
-                } else {
-                    this.stockHQ.lowPrice = Math.round(this.stockHQ.preClosePrice * 90) / 100;
-                    this.stockHQ.highPrice = Math.round(this.stockHQ.preClosePrice * 110) / 100;
-                }
+                // if (this.stockName.includes('ST')) {
+                //     this.stockHQ.lowPrice = Math.round(this.stockHQ.preClosePrice * 95) / 100;
+                //     this.stockHQ.highPrice = Math.round(this.stockHQ.preClosePrice * 105) / 100;
+                // } else {
+                //     this.stockHQ.lowPrice = Math.round(this.stockHQ.preClosePrice * 90) / 100;
+                //     this.stockHQ.highPrice = Math.round(this.stockHQ.preClosePrice * 110) / 100;
+                // }
                 this.fullcount = res['resultInfo']['maxAppointCnt'];
                 this.appointPrice = Math.round(parseFloat(this.stockHQ.lastPrice) * 100) / 100;
             } else {
@@ -179,10 +178,6 @@ export class BuyComponent implements DoCheck {
             this.data.ErrorMsg('委托价格不能超过两位小数');
         } else if (this.data.isNull(this.appointPrice)) {
             this.data.ErrorMsg('委托价格不能为空');
-        } else if (this.appointPrice < parseFloat(this.stockHQ.lowPrice).toFixed(2)) {
-            this.data.ErrorMsg('委托价格不能低于跌停价');
-        } else if (this.appointPrice > parseFloat(this.stockHQ.highPrice).toFixed(2)) {
-            this.data.ErrorMsg('委托价格不能高于涨停价');
         } else if (typeof (this.appointCnt) !== 'number') {
             this.appointCnt = 0;
             this.data.ErrorMsg(this.text + '数量必须是数字');
@@ -355,13 +350,13 @@ export class BuyComponent implements DoCheck {
             that.stompClient.subscribe('/user/' + that.data.getToken() + '/topic/market', function (res) {
                 that.stockHQ = JSON.parse(res.body);
                 that.stockName = that.stockHQ.stockName;
-                if (that.stockName.includes('ST')) {
-                    that.stockHQ.lowPrice = Math.round(that.stockHQ.preClosePrice * 95) / 100;
-                    that.stockHQ.highPrice = Math.round(that.stockHQ.preClosePrice * 105) / 100;
-                } else {
-                    that.stockHQ.lowPrice = Math.round(that.stockHQ.preClosePrice * 90) / 100;
-                    that.stockHQ.highPrice = Math.round(that.stockHQ.preClosePrice * 110) / 100;
-                }
+                // if (that.stockName.includes('ST')) {
+                //     that.stockHQ.lowPrice = Math.round(that.stockHQ.preClosePrice * 95) / 100;
+                //     that.stockHQ.highPrice = Math.round(that.stockHQ.preClosePrice * 105) / 100;
+                // } else {
+                //     that.stockHQ.lowPrice = Math.round(that.stockHQ.preClosePrice * 90) / 100;
+                //     that.stockHQ.highPrice = Math.round(that.stockHQ.preClosePrice * 110) / 100;
+                // }
                 // if (that.appointPrice !== '') {
                 //     // tslint:disable-next-line:max-line-length
                 // tslint:disable-next-line:max-line-length

@@ -4,8 +4,8 @@
 			<td>
 				名称
 			</td>
-			<td>
-				参考盈亏
+			<td (click)="changeTitle()">
+				{{titleText}}<img class="change_image" src="../../assets/images/qiehuan.png" alt="">
 			</td>
 			<td>
 				持仓/可用
@@ -20,7 +20,15 @@
 				<p>{{a.stockName}}</p>
 			</td>
 			<td class="{{a.profit < 0?'green':'red'}}">
-				{{a.profit}}
+				<p>
+					{{a.profit}}
+				</p>
+				<p *ngIf="titleFlag;">
+					{{a.profitRatio}}
+				</p>
+				<p *ngIf="!titleFlag;">
+					{{a.stockTotalPrice}}
+				</p>
 			</td>
 			<td>
 				<p>

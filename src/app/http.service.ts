@@ -5,9 +5,9 @@ import { DataService } from './data.service';
 @Injectable()
 export class HttpService {
   stompClient: any;
-  // public host = 'http://192.168.88.148:8080';
+  // public host = 'http://192.168.1.88:10008/tnproxy/';
   // public host = 'http://218.85.23.217:8082/tnproxy/';
-  public host = 'http://47.103.29.17/tnproxy/';
+  public host = 'http://106.15.92.93:10008/tnproxy/';
   public ws = this.host + 'webSocket';
   public stockHQ: any;
 
@@ -80,8 +80,8 @@ export class HttpService {
   /**
    * 确认撤单
    */
-  chedan(code) {
-    return this.POST(this.host + 'cancel/' + code, {});
+  chedan(productCode, appointOrderCode) {
+    return this.POST(this.host + 'cancel/' + productCode + '/' + appointOrderCode, {});
   }
 
   /**

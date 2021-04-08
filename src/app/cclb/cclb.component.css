@@ -2,6 +2,13 @@
     background: #fff;
 }
 
+.change_image{
+    width: 14px;
+    float: right;
+    margin-top: 1px;
+    margin-left: -10px;
+}
+
 .cclb table {
     width: 100%;
     text-align: center;
@@ -24,4 +31,9 @@
 
 .red {
     color: #b00e23;
+}
+
+.sortIcon {
+    width: 12px;
+    margin-top: -4px;
 }
